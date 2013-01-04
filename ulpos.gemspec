@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "ulpos"
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bob Wang"]
@@ -27,7 +27,8 @@ Gem::Specification.new do |s|
     "VERSION",
     "lib/ulpos.rb",
     "lib/ulpos/client.rb",
-    "lib/ulpos/version.rb"
+    "lib/ulpos/version.rb",
+    "ulpos.gemspec"
   ]
   s.homepage = "http://github.com/wxmcan/ulpos"
   s.licenses = ["MIT"]
