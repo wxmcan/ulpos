@@ -9,25 +9,28 @@ module Ulpos
       @endpoint = endpoint 
     end
 
-    def invoke(method, options = {})
+    def invoke(method = nil, options = {})
       params = {
-        :timestamp => Time.now.strftime("%Y-%m-%d %H:%M:%S"),
-        :format => 'json',
-        :app_key => @app_key,
-        :v => '2.0',
+        :appkey => @app_key,
+        :timestamp => Time.now.to_i.to_s,
+        :signature_method => 'md5',
         :method => method,
-        :sign_method => 'md5'
+        :format => 'json'
       }
       params.merge!(options)
-      str = @app_secret + (params.sort.collect { |param| "#{param[0]}#{param[1]}" }).join("") + @app_secret
-      params["sign"] = Digest::MD5.hexdigest(str).upcase!
-      res = Net::HTTP.post_form(URI.parse(@endpoint), params)
+      str = params.sort.collect { |param| "#{param[0]}=#{param[1]}" }.join("&")
+      sign_str = @app_key + params[:timestamp] + @app_secret + params[:signature_method]
+      sign = Digest::MD5.hexdigest(sign_str)
+      method = "/#{params[:method]}" if params[:method]
+      url = "#{@endpoint}#{method}?#{str}&sign=#{sign}"
+      response = Net::HTTP.get(URI.parse(url))
+
       if params[:format] == 'json'
-        JSON.parse(res.body)
+        JSON.parse(response)
       elsif params[:format] == 'xml'
-        res.body
+        response
       else
-        res.body
+        response
       end
     end
   end
