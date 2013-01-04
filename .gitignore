@@ -16,4 +16,5 @@ doc
 pkg
 
 *.swp
+*.swo
 test
